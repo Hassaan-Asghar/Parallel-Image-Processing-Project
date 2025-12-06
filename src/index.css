@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Theme: Deep Midnight Aurora */
+    --background: 222 47% 4%; /* Ultra dark void */
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 6%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 5%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Neon Cyan */
+    --primary: 180 100% 50%;
+    --primary-foreground: 222 47% 4%;
+
+    /* Deep Indigo */
+    --secondary: 240 60% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 223 47% 12%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Electric Purple */
+    --accent: 280 100% 65%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 32% 18%;
+    --input: 217 32% 18%;
+    --ring: 180 100% 50%;
+
+    --radius: 1rem;
+    
+    /* Chart Colors */
+    --success: 150 100% 45%;
+    --warning: 35 100% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30 selection:text-white;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* --- Visual Effects --- */
+  
+  /* Modern Glassmorphism - Cleaner & crisper */
+  .glass-panel {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-2xl;
+  }
+  
+  .glass-card {
+    @apply bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-2xl border border-white/[0.05] 
+           shadow-xl transition-all duration-300 hover:border-primary/30 hover:shadow-primary/10 hover:-translate-y-1;
+  }
+
+  /* Text Gradients */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-accent animate-gradient-x;
+    background-size: 200% auto;
+  }
+
+  /* Buttons */
+  .btn-glow {
+    @apply relative overflow-hidden transition-all duration-300 shadow-[0_0_20px_-5px_hsl(var(--primary)/0.4)];
+  }
+  .btn-glow:hover {
+    @apply shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] scale-[1.02];
+  }
+
+  /* --- Animations --- */
+  
+  .animate-gradient-x {
+    animation: gradient-x 8s ease infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+  }
+
+  @keyframes gradient-x {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.1); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Background Utilities */
+  .bg-grid-pattern {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  }
+}
