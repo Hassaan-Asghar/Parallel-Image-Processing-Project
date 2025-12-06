@@ -1,15 +1,27 @@
-# 🚀 ParallelVision  
+# ParallelVision  
 ### High-Performance Parallel Image Processing System
 
 **ParallelVision** is a full-stack image processing engine designed to demonstrate the power of **parallel computing** over traditional sequential execution.  
 It performs advanced image enhancement and segmentation while providing **real-time performance analytics** and **CPU utilization visualization**.
 
-> ⚡ Experience the speed difference between **Parallel vs. Sequential** image processing!
+> Experience the speed difference between **Parallel vs. Sequential** image processing!
 
-📌 *(Insert system architecture / pipeline image here)*
+- Step 1 Load Images
+
+- Step 2 Parallel Assignment
+
+- Step 3 Noise Detection
+
+- Step 4 Denoising 
+
+- Step 5 Enhancement
+
+- Step 6 Segmentation
+
+- Step 7 Performance Metrics
 
 
-## ✨ Features
+## Features
 
 - **Parallel Performance Engine**  
   Speedup calculation based on sequential vs. concurrent time comparison.
@@ -27,7 +39,7 @@ It performs advanced image enhancement and segmentation while providing **real-t
   Midnight Aurora theme with glassmorphism visuals and smooth animations.
 
 
-## 🏗️ Technology Stack
+## Technology Stack
 
 | Layer | Tech | Purpose |
 |------|------|---------|
@@ -37,7 +49,7 @@ It performs advanced image enhancement and segmentation while providing **real-t
 | **Processing** | OpenCV, NumPy, `concurrent.futures` | Multi-thread execution |
 
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
 This project runs two services independently:
 1️⃣ **Backend** (FastAPI)  
