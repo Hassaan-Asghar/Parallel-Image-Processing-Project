@@ -5,6 +5,7 @@
 It performs advanced image enhancement and segmentation while providing **real-time performance analytics** and **CPU utilization visualization**.
 
 > Experience the speed difference between **Parallel vs. Sequential** image processing!
+## Pipeling
 
 - Step 1 Load Images
 
