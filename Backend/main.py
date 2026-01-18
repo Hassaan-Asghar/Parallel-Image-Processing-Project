@@ -36,7 +36,7 @@ def health_check():
 
 @app.get("/outputs/{session_id}/{filename}")
 def get_output_file(session_id: str, filename: str):
-    path = f"outputs/{session_id}/{filename}"
+    path = f"{OUTPUT_DIR}/{session_id}/{filename}"
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(path)
@@ -45,24 +45,25 @@ def get_output_file(session_id: str, filename: str):
 async def upload_images(
     background_tasks: BackgroundTasks,
     files: list[UploadFile] = File(...),
-    mode: str = Form("auto"),
+    mode: str = Form("auto"), 
     noise_mode: str = Form("auto"),
     enhance_mode: str = Form("auto"),
     segment_mode: str = Form("auto")
 ):
-    session_id = str(uuid.uuid4())
+    session_id = uuid.uuid4().hex[:6]
+    
     total_images = len(files)
     job_status[session_id] = "processing"
 
-    session_upload = f"{UPLOAD_DIR}/{session_id}"
-    session_output = f"{OUTPUT_DIR}/{session_id}"
+    session_upload = os.path.join(UPLOAD_DIR, session_id)
+    session_output = os.path.join(OUTPUT_DIR, session_id)
 
     os.makedirs(session_upload, exist_ok=True)
     os.makedirs(session_output, exist_ok=True)
 
     img_paths = []
     for file in files:
-        path = f"{session_upload}/{file.filename}"
+        path = os.path.join(session_upload, file.filename)
         with open(path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         img_paths.append(path)
@@ -71,7 +72,6 @@ async def upload_images(
         process_job,
         session_id,
         img_paths,
-        mode,
         noise_mode,
         enhance_mode,
         segment_mode
@@ -85,10 +85,7 @@ async def upload_images(
 @app.get("/status/{session_id}")
 def get_status(session_id: str):
     if session_id not in job_status:
-        raise HTTPException(
-            status_code=404,
-            detail="Session ID not found"
-        )
+        raise HTTPException(status_code=404, detail="Session ID not found")
 
     return {
         "session_id": session_id,
@@ -98,7 +95,6 @@ def get_status(session_id: str):
 def process_job(
     session_id,
     img_paths,
-    mode,
     noise_mode,
     enhance_mode,
     segment_mode
@@ -111,7 +107,6 @@ def process_job(
             (
                 path,
                 data,
-                mode,
                 noise_mode,
                 enhance_mode,
                 segment_mode,
@@ -122,18 +117,15 @@ def process_job(
         ]
 
         serial_results, serial_time = run_serial(args_list)
-
         parallel_results, parallel_time = run_parallel(args_list)
 
-        speedup = round(
-            serial_time / parallel_time, 2
-        ) if parallel_time > 0 else 0
+        speedup = round(serial_time / parallel_time, 2) if parallel_time > 0 else 0
 
         response_images = []
 
         for path, img in parallel_results:
             name = os.path.basename(path)
-            out_path = f"{OUTPUT_DIR}/{session_id}/final_{name}"
+            out_path = os.path.join(OUTPUT_DIR, session_id, f"final_{name}")
             cv2.imwrite(out_path, img)
 
             response_images.append({
@@ -154,17 +146,15 @@ def process_job(
         job_status[session_id] = "done"
 
     except Exception as e:
+        print(f"Error processing session {session_id}: {e}")
         job_status[session_id] = "error"
         job_results[session_id] = {"error": str(e)}
-
 
 @app.get("/results/{session_id}")
 def get_results(session_id: str):
     if session_id not in job_status:
-        raise HTTPException(
-            status_code=404,
-            detail="Session ID not found"
-        )
+        raise HTTPException(status_code=404, detail="Session ID not found")
+    
     if job_status.get(session_id) != "done":
         return {"status": job_status.get(session_id)}
 
