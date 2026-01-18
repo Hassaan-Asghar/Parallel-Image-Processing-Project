@@ -2,9 +2,9 @@
 FROM python:3.11-slim
 
 # 1. Install system dependencies required by OpenCV
-# We install libgl1, libglib, and the specific libxcb libraries causing your crash
+# NOTE: 'libgl1' replaces the obsolete 'libgl1-mesa-glx'
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libxcb1 \
     libx11-xcb1 \
@@ -24,5 +24,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # 4. Run the application
-# We use shell form to correctly expand the $PORT variable provided by Railway
 CMD uvicorn main:app --host 0.0.0.0 --port $PORT
