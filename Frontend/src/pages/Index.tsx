@@ -62,11 +62,12 @@ const Index = () => {
             <div className="w-full max-w-lg animate-fade-in-up delay-200 flex-shrink-0">
               <div className="w-full">
                 
-                <div className="flex flex-col bg-gradient-to-b from-slate-900 to-[#050505] border border-slate-700/50 rounded-2xl p-5 shadow-2xl hover:border-cyan-500/50 hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.15)] transition-all cursor-default relative overflow-hidden group">
+                <div className="flex flex-col bg-gradient-to-b from-slate-900 to-[#050505] border border-slate-700/50 rounded-2xl p-6 shadow-2xl hover:border-cyan-500/50 hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.15)] transition-all cursor-default relative overflow-hidden group">
                   
                   <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                  <div className="flex items-center justify-between relative z-10 mb-4 border-b border-white/5 pb-3">
+                  {/* Header Row */}
+                  <div className="flex items-center justify-between relative z-10 mb-6 border-b border-white/5 pb-4">
                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">System Status</span>
                      
                      {backendStatus === 'connected' ? (
@@ -95,17 +96,14 @@ const Index = () => {
                      )}
                   </div>
 
-                  <div className="flex items-center gap-4 relative z-10 min-w-0">
-                    <div className="bg-black/40 p-3 rounded-xl text-cyan-400 border border-cyan-900/30 shadow-inner flex-shrink-0 group-hover:text-cyan-300 transition-colors">
+                  <div className="flex items-center md:gap-4 relative z-10 min-w-0 w-full">
+
+                    <div className="hidden md:block bg-black/40 p-3 rounded-xl text-cyan-400 border border-cyan-900/30 shadow-inner flex-shrink-0 group-hover:text-cyan-300 transition-colors">
                       <Server className="w-6 h-6" />
                     </div>
-                    
-                    <div className="min-w-0 flex-1">
-                       <div className="w-full overflow-x-auto no-scrollbar">
-                          <div className="scale-100 origin-left whitespace-nowrap">
-                             <ApiStatus onStatusChange={setBackendStatus} /> 
-                          </div>
-                       </div>
+
+                    <div className="w-full md:flex-1 md:w-auto min-w-0">
+                       <ApiStatus onStatusChange={setBackendStatus} />
                     </div>
                   </div>
 
@@ -131,10 +129,11 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             
             <div className="group relative bg-gradient-to-br from-slate-900 via-[#0B0B0F] to-black border border-slate-800 p-8 md:p-10 rounded-3xl transition-all duration-300 hover:border-blue-500/60 hover:shadow-[0_0_50px_-15px_rgba(59,130,246,0.2)]">
-              <div className="absolute top-8 right-8 p-3 bg-blue-500/10 rounded-2xl text-blue-400 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all border border-blue-500/10">
-                <Wand2 className="w-6 h-6" />
+              <div className="absolute top-6 right-6 md:top-8 md:right-8 p-3 bg-blue-500/10 rounded-2xl text-blue-400 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all border border-blue-500/10">
+                <Wand2 className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-blue-400 transition-colors">Auto Pilot</h3>
+              
+              <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-blue-400 transition-colors pr-12">Auto Pilot</h3>
               <p className="text-slate-400 mb-8 leading-relaxed h-auto md:h-20 text-sm md:text-base group-hover:text-slate-300 transition-colors">
                 AI-driven analysis. Automatically detects noise density (MAD) and histogram distribution to apply optimal filter chains without user intervention.
               </p>
@@ -145,11 +144,13 @@ const Index = () => {
               </div>
             </div>
 
+
             <div className="group relative bg-gradient-to-br from-slate-900 via-[#0B0B0F] to-black border border-slate-800 p-8 md:p-10 rounded-3xl transition-all duration-300 hover:border-purple-500/60 hover:shadow-[0_0_50px_-15px_rgba(168,85,247,0.2)]">
-              <div className="absolute top-8 right-8 p-3 bg-purple-500/10 rounded-2xl text-purple-400 group-hover:scale-110 group-hover:bg-purple-500/20 transition-all border border-purple-500/10">
-                <Settings className="w-6 h-6" />
+              <div className="absolute top-6 right-6 md:top-8 md:right-8 p-3 bg-purple-500/10 rounded-2xl text-purple-400 group-hover:scale-110 group-hover:bg-purple-500/20 transition-all border border-purple-500/10">
+                <Settings className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-purple-400 transition-colors">Manual Override</h3>
+              
+              <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-purple-400 transition-colors pr-12">Manual Override</h3>
               <p className="text-slate-400 mb-8 leading-relaxed h-auto md:h-20 text-sm md:text-base group-hover:text-slate-300 transition-colors">
                 Granular control over the pipeline. Explicitly select algorithms for Denoising (Gaussian/Median) and Segmentation (Otsu/GrabCut).
               </p>
