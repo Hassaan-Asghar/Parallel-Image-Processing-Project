@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Play, Zap, Layers, Timer, Activity, 
+  Settings, Zap, Layers, Timer, Activity, 
   ScanEye, CheckCircle2, MoveHorizontal, FileArchive, Loader2 
 } from 'lucide-react';
 import JSZip from 'jszip';
@@ -263,16 +263,47 @@ const Dashboard = () => {
                     <ImageUploader onFilesSelected={setFiles} maxFiles={100} />
                   </div>
                   {files.length > 0 && (
-                    <div className="pt-4 flex justify-center">
-                      <Button 
-                        size="lg" 
-                        className="h-16 px-12 text-lg font-bold rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_40px_-10px_rgba(6,182,212,0.4)] transition-all hover:scale-105"
-                        onClick={handleRunAnalysis}
-                      >
-                        <Play className="mr-3 w-5 h-5 fill-white" />
-                        RUN ANALYSIS
-                      </Button>
-                    </div>
+                    <div className="pt-8 flex justify-center">
+  <Button 
+    className="
+      group relative rounded-full overflow-hidden
+      
+      /* RESPONSIVE SIZE */
+      h-12 px-8 text-sm           /* Mobile: Compact size */
+      md:h-16 md:px-12 md:text-lg /* Desktop: Large impact size */
+
+      /* COLOR CHANGE: Darker 'Deep Blue' Gradient */
+      /* Flows from Dark Blue -> Medium Blue -> Dark Blue */
+      bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 
+      bg-[length:200%_auto] hover:bg-right
+      
+      font-bold tracking-wide text-white
+      
+      /* Shadow adjusted to match the darker blue tone */
+      shadow-[0_0_30px_-5px_rgba(30,64,175,0.5)] 
+      hover:shadow-[0_0_50px_-10px_rgba(30,64,175,0.8)]
+      
+      transition-all duration-500 ease-out
+      hover:scale-105 active:scale-95 border border-white/10
+    "
+    onClick={handleRunAnalysis}
+  >
+    {/* Shine Effect Overlay */}
+    <div className="absolute inset-0 bg-white/20 translate-y-full skew-y-12 group-hover:translate-y-[-150%] transition-transform duration-700 ease-in-out" />
+
+    {/* ICON: Gear/Settings with Continuous Spin on Hover */}
+    <Settings className="
+      relative z-10 mr-3 
+      w-5 h-5 md:w-6 md:h-6 /* Icon scales with button */
+      stroke-[2px]
+      transition-colors duration-300
+      group-hover:animate-spin
+      group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]
+    " />
+    
+    <span className="relative z-10">START PROCESSING</span>
+  </Button>
+</div>
                   )}
                 </div>
               </Tabs>
