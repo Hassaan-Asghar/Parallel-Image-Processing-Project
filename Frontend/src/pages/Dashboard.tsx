@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
 import { 
   Settings, Zap, Layers, Timer, Activity, 
-  ScanEye, CheckCircle2, MoveHorizontal, FileArchive, Loader2 
+  ScanEye, CheckCircle2, MoveHorizontal, FileArchive, Loader2, RotateCcw, Download 
 } from 'lucide-react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -57,18 +57,18 @@ const CompactComparisonSlider = ({ clean, result, filename }: { clean: string, r
   }, [isResizing]);
 
   return (
-    <div className="group relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-black select-none shadow-2xl">
+    <div className="group relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-black select-none shadow-2xl touch-none">
       
       <div 
         ref={containerRef}
-        className="relative w-full h-full cursor-col-resize"
+        className="relative w-full h-full cursor-col-resize touch-none"
         onMouseDown={handleStart}
         onTouchStart={handleStart}
       >
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
           <img 
             src={clean} 
-            alt="Clean Scan" 
+            alt="Original" 
             className="w-full h-full object-cover grayscale brightness-110 contrast-105" 
           />
         </div>
@@ -81,7 +81,7 @@ const CompactComparisonSlider = ({ clean, result, filename }: { clean: string, r
         >
            <img 
              src={result} 
-             alt="Tumor Detected" 
+             alt="Processed" 
              className="w-full h-full object-cover" 
            />
         </div>
@@ -95,16 +95,16 @@ const CompactComparisonSlider = ({ clean, result, filename }: { clean: string, r
           </div>
         </div>
         
-        <div className="absolute top-3 left-3 px-2 py-1 bg-red-500/80 backdrop-blur-md rounded text-[10px] font-black tracking-widest text-white shadow-lg pointer-events-none z-30 transition-opacity opacity-0 group-hover:opacity-100">
-          TUMOR
+        <div className="absolute top-2.5 left-2 px-0.5 py-0.5 bg-red-600/90 backdrop-blur-md rounded text-[8px] md:text-[10px] font-bold tracking-wider text-white shadow-sm pointer-events-none z-30 transition-opacity opacity-0 group-hover:opacity-100">
+          PROCESSED
         </div>
-        <div className="absolute top-3 right-3 px-2 py-1 bg-slate-800/80 backdrop-blur-md rounded text-[10px] font-black tracking-widest text-slate-200 shadow-lg pointer-events-none z-30 transition-opacity opacity-0 group-hover:opacity-100">
-          CLEAN SCAN
+        <div className="absolute top-2.5 right-2 px-0.5 py-0.5 bg-slate-900/80 backdrop-blur-md rounded text-[8px] md:text-[10px] font-bold tracking-wider text-slate-300 shadow-sm pointer-events-none z-30 transition-opacity opacity-0 group-hover:opacity-100">
+          ORIGINAL
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30">
-         <span className="text-[10px] text-slate-300 font-mono truncate max-w-[80%]">{filename}</span>
+      <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex justify-between items-end pointer-events-none z-30">
+         <span className="text-[10px] text-slate-300 font-mono truncate max-w-[90%]">{filename}</span>
       </div>
     </div>
   );
@@ -161,7 +161,7 @@ const Dashboard = () => {
 
       setTimeout(() => {
         setViewState('results');
-        toast({ title: "Analysis Complete", description: "Segmentation finished successfully." });
+        toast({ title: "Analysis Complete", description: "Processing finished successfully." });
       }, 500);
 
     } catch (error: any) {
@@ -264,46 +264,25 @@ const Dashboard = () => {
                   </div>
                   {files.length > 0 && (
                     <div className="pt-8 flex justify-center">
-  <Button 
-    className="
-      group relative rounded-full overflow-hidden
-      
-      /* RESPONSIVE SIZE */
-      h-12 px-8 text-sm           /* Mobile: Compact size */
-      md:h-16 md:px-12 md:text-lg /* Desktop: Large impact size */
-
-      /* COLOR CHANGE: Darker 'Deep Blue' Gradient */
-      /* Flows from Dark Blue -> Medium Blue -> Dark Blue */
-      bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 
-      bg-[length:200%_auto] hover:bg-right
-      
-      font-bold tracking-wide text-white
-      
-      /* Shadow adjusted to match the darker blue tone */
-      shadow-[0_0_30px_-5px_rgba(30,64,175,0.5)] 
-      hover:shadow-[0_0_50px_-10px_rgba(30,64,175,0.8)]
-      
-      transition-all duration-500 ease-out
-      hover:scale-105 active:scale-95 border border-white/10
-    "
-    onClick={handleRunAnalysis}
-  >
-    {/* Shine Effect Overlay */}
-    <div className="absolute inset-0 bg-white/20 translate-y-full skew-y-12 group-hover:translate-y-[-150%] transition-transform duration-700 ease-in-out" />
-
-    {/* ICON: Gear/Settings with Continuous Spin on Hover */}
-    <Settings className="
-      relative z-10 mr-3 
-      w-5 h-5 md:w-6 md:h-6 /* Icon scales with button */
-      stroke-[2px]
-      transition-colors duration-300
-      group-hover:animate-spin
-      group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]
-    " />
-    
-    <span className="relative z-10">START PROCESSING</span>
-  </Button>
-</div>
+                      <Button 
+                        className="
+                          group relative rounded-full overflow-hidden
+                          h-12 px-8 text-sm md:h-16 md:px-12 md:text-lg
+                          bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 
+                          bg-[length:200%_auto] hover:bg-right
+                          font-bold tracking-wide text-white
+                          shadow-[0_0_30px_-5px_rgba(30,64,175,0.5)] 
+                          hover:shadow-[0_0_50px_-10px_rgba(30,64,175,0.8)]
+                          transition-all duration-500 ease-out
+                          hover:scale-105 active:scale-95 border border-white/10
+                        "
+                        onClick={handleRunAnalysis}
+                      >
+                        <div className="absolute inset-0 bg-white/20 translate-y-full skew-y-12 group-hover:translate-y-[-150%] transition-transform duration-700 ease-in-out" />
+                        <Settings className="relative z-10 mr-3 w-5 h-5 md:w-6 md:h-6 stroke-[2px] transition-colors duration-300 group-hover:animate-spin group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                        <span className="relative z-10">START PROCESSING</span>
+                      </Button>
+                    </div>
                   )}
                 </div>
               </Tabs>
@@ -340,21 +319,32 @@ const Dashboard = () => {
         {viewState === 'results' && results && (
           <div className="animate-fade-in-up space-y-12 max-w-[1600px] mx-auto">
             
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-8">
-              <div>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b border-white/10 pb-8">
+              <div className="w-full">
                 <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                  <CheckCircle2 className="text-green-500 w-8 h-8" />
+                  <CheckCircle2 className="text-green-500 w-8 h-8 flex-shrink-0" />
                   Analysis Complete
                 </h2>
-                <p className="text-slate-400 mt-1">Session ID: <code className="text-slate-300 bg-white/5 px-2 rounded">{results.session_id}</code></p>
+                <div className="flex items-center gap-2 mt-3 bg-white/5 w-fit px-3 py-1.5 rounded-lg border border-white/5">
+                   <span className="text-slate-400 text-xs uppercase font-bold tracking-wider">SESSION ID</span>
+                   <code className="text-cyan-300 font-mono text-sm truncate max-w-[120px] md:max-w-xs" title={results.session_id}>
+                     {results.session_id}
+                   </code>
+                </div>
               </div>
-              <div className="flex gap-4">
-                  <Button variant="outline" onClick={resetDashboard} className="border-white/10 hover:bg-white/5 text-slate-300">
+              
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                  <Button 
+                    variant="outline" 
+                    onClick={resetDashboard} 
+                    className="group h-12 border-white/10 hover:bg-white/5 text-slate-300 w-full sm:w-auto"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2 transition-transform duration-500 group-hover:-rotate-180" /> 
                     New Analysis
                   </Button>
                   
                   <Button 
-                    className="bg-cyan-600 hover:bg-cyan-500 text-white gap-2 shadow-[0_0_20px_-5px_rgba(6,182,212,0.5)]"
+                    className="h-12 bg-cyan-600 hover:bg-cyan-500 text-white gap-2 shadow-[0_0_20px_-5px_rgba(6,182,212,0.5)] w-full sm:w-auto px-6"
                     onClick={handleDownloadZip}
                     disabled={isZipping}
                   >
@@ -408,18 +398,18 @@ const Dashboard = () => {
 
             <div className="space-y-6">
                <h3 className="text-2xl font-bold text-white flex items-center gap-2 pb-4 border-b border-white/5">
-                 <Layers className="w-6 h-6 text-purple-400" /> Segmented Output
+                 <Layers className="w-6 h-6 text-purple-400" /> System Output Visualization
                </h3>
                
                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                 {results.results.map((res, idx) => (
-                   <CompactComparisonSlider 
-                     key={idx}
-                     clean={res.enhanced}
-                     result={res.segmented}
-                     filename={res.filename}
-                   />
-                 ))}
+                  {results.results.map((res, idx) => (
+                    <CompactComparisonSlider 
+                      key={idx}
+                      clean={res.enhanced}
+                      result={res.segmented}
+                      filename={res.filename}
+                    />
+                  ))}
                </div>
             </div>
 
