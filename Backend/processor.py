@@ -1,7 +1,6 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-
 def run_serial(args_list):
     start = time.time()
     results = []
