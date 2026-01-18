@@ -1,16 +1,28 @@
 import { useEffect, useState } from 'react';
 import { healthCheck, API_BASE_URL } from '@/lib/api';
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils'; // No longer needed if we remove the badge
 import { CheckCircle2, XCircle, Loader2, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export function ApiStatus() {
+// Define props to pass status up to parent
+interface ApiStatusProps {
+  onStatusChange?: (status: 'checking' | 'connected' | 'disconnected') => void;
+}
+
+export function ApiStatus({ onStatusChange }: ApiStatusProps) {
   const [status, setStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
+
+  const updateStatus = (newStatus: 'checking' | 'connected' | 'disconnected') => {
+    setStatus(newStatus);
+    if (onStatusChange) {
+      onStatusChange(newStatus);
+    }
+  };
 
   useEffect(() => {
     const checkConnection = async () => {
       const isConnected = await healthCheck();
-      setStatus(isConnected ? 'connected' : 'disconnected');
+      updateStatus(isConnected ? 'connected' : 'disconnected');
     };
 
     checkConnection();
@@ -26,6 +38,7 @@ export function ApiStatus() {
       </div>
 
       <div className="space-y-4">
+        {/* Main Status Row */}
         <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-xl">
           <div className="flex items-center gap-3">
             {status === 'checking' && (
@@ -42,21 +55,17 @@ export function ApiStatus() {
               <p className="text-xs text-muted-foreground font-mono">{API_BASE_URL}</p>
             </div>
           </div>
-          <div className={cn(
-            "px-3 py-1 rounded-full text-xs font-medium",
-            status === 'connected' && "bg-success/10 text-success",
-            status === 'disconnected' && "bg-destructive/10 text-destructive",
-            status === 'checking' && "bg-muted text-muted-foreground"
-          )}>
-            {status === 'checking' ? 'Checking...' : status === 'connected' ? 'Connected' : 'Disconnected'}
-          </div>
+          
+          {/* --- REMOVED THE BADGE SECTION HERE AS REQUESTED --- */}
+          
         </div>
 
         {status === 'disconnected' && (
           <div className="p-4 bg-warning/10 border border-warning/30 rounded-xl">
             <p className="text-sm text-warning mb-2 font-medium">Backend not reachable</p>
             <p className="text-xs text-muted-foreground">
-              Make sure your Python backend is running at <code className="font-mono bg-secondary px-1 rounded">{API_BASE_URL}</code>
+              Make sure your Python backend <br/>is running at<br/>
+                 <code className="font-mono bg-secondary">{API_BASE_URL}</code>
             </p>
           </div>
         )}
@@ -65,9 +74,9 @@ export function ApiStatus() {
           variant="outline" 
           className="w-full"
           onClick={() => {
-            setStatus('checking');
+            updateStatus('checking'); // Use wrapper to update parent too
             healthCheck().then(connected => 
-              setStatus(connected ? 'connected' : 'disconnected')
+              updateStatus(connected ? 'connected' : 'disconnected')
             );
           }}
         >
