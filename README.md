@@ -1,90 +1,114 @@
-# ParallelVision  
-### High-Performance Parallel Image Processing System
+# ParallelVision ⚡
+### High Performance Parallel Image Processing System
 
-**ParallelVision** is a full-stack image processing engine designed to demonstrate the power of **parallel computing** over traditional sequential execution.  
-It performs advanced image enhancement and segmentation while providing **real-time performance analytics** and **CPU utilization visualization**.
+[![Live Demo](https://parallel-image-processing-project.vercel.app/)
 
-> Experience the speed difference between **Parallel vs. Sequential** image processing!
-## Pipeling
+**ParallelVision** is a full-stack image processing engine engineered to demonstrate the superior efficiency of **parallel computing** over traditional sequential execution. 
 
-- Step 1 Load Images
+Designed for medical imaging (specifically brain tumor MRI scans), it features a dual-mode processing pipeline ("Auto" & "Advanced") that leverages **multi-threading** to perform noise reduction, contrast enhancement, and **K-Means clustering segmentation**. The application provides real-time analytics, visualizing the speedup achieved by processing batched image data in parallel.
 
-- Step 2 Parallel Assignment
+> **Experience the difference:** Compare serial vs. parallel execution times in real time with our interactive dashboard.
 
-- Step 3 Noise Detection
+---
 
-- Step 4 Denoising 
+## Key Features
 
-- Step 5 Enhancement
+- ** Parallel Performance Engine**
+  - Utilizes `ThreadPoolExecutor` to process multiple images simultaneously.
+  - Calculates and displays the exact **Speedup Factor** (Serial Time / Parallel Time).
 
-- Step 6 Segmentation
+- ** Intelligent Segmentation**
+  - **Robust K-Means Clustering:** Automatically groups pixel intensities to isolate tumor regions from brain tissue and background, superior to simple thresholding.
+  - **Morphological Operations:** Cleans noise and refines tumor boundaries.
 
-- Step 7 Performance Metrics
+- ** Dual Processing Modes**
+  - **Auto Mode:** Automatically detects noise levels and applies optimal thresholds.
+  - **Advanced Mode:** Granular control over algorithms (Bilateral Filter, NLM, CLAHE, etc.).
 
+- ** Real-Time Analytics Dashboard**
+  - Live visualization of processing status, time taken, and performance metrics.
 
-## Features
+- ** Interactive Visualization**
+  - **Before/After Sliders:** Compare original vs. processed images side-by-side.
+  - **Mask Overlay:** Clearly highlights segmented tumor regions in red.
 
-- **Parallel Performance Engine**  
-  Speedup calculation based on sequential vs. concurrent time comparison.
+- ** Modern UI/UX**
+  - "Midnight Aurora" theme featuring glassmorphism, smooth animations, and a responsive layout built with **Tailwind CSS**.
 
-- **Real-Time Analytics Dashboard**  
-  CPU core usage graphs + processing time charts.
+---
 
-- **Interactive Image Comparison**  
-  Before/After image slider to visualize denoised or segmented output.
+## The Pipeline
 
-- **Complete Processing Pipeline**  
-  Noise Detection → Denoising → Enhancement (CLAHE) → Segmentation
+The system follows a strict 7-step pipeline to ensure high-quality output:
 
-- **Modern UI/UX**  
-  Midnight Aurora theme with glassmorphism visuals and smooth animations.
+1. ** Upload:** User uploads a batch of MRI scans via the frontend.
+2. ** Assignment:** The backend distributes tasks across available threads.
+3. ** Noise Detection:** Calculates noise sigma using Median Absolute Deviation (MAD).
+4. ** Denoising:** Applies Non-Local Means (NLM) or Bilateral Filtering based on noise intensity.
+5. ** Enhancement:** Improves contrast using CLAHE (Contrast Limited Adaptive Histogram Equalization).
+6. ** Segmentation:** Isolates the Region of Interest (ROI/Tumor) using K-Means Clustering.
+7. ** Metrics:** Aggregates timing data to generate performance reports.
+8. ** Output:** Visualize resultant images using a slider (tumor overlay on original image slide to see) and can download them. 
 
+---
 
 ## Technology Stack
 
-| Layer | Tech | Purpose |
-|------|------|---------|
-| **Frontend** | React, TypeScript, Vite | Visualization dashboard |
-| **Styling** | Tailwind CSS, shadcn-ui | Modern UI components |
-| **Backend** | Python 3.10+, FastAPI | Parallel image processing API |
-| **Processing** | OpenCV, NumPy, `concurrent.futures` | Multi-thread execution |
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React, TypeScript, Vite | Interactive UI & Visualization |
+| **Styling** | Tailwind CSS, shadcn/ui | Modern, responsive components |
+| **Backend** | Python 3.10+, FastAPI | High-performance async API |
+| **Processing** | OpenCV, NumPy | Image manipulation algorithms |
+| **Concurrency** | `concurrent.futures` | Multi-threaded execution management |
+| **Deployment** | Vercel (FE), Railway (BE) | Cloud hosting |
 
+---
 
 ## Installation & Setup
 
-This project runs two services independently:
-1️⃣ **Backend** (FastAPI)  
-2️⃣ **Frontend** (React)
+This project consists of two distinct parts: the **Backend API** and the **Frontend Dashboard**.
 
+### Prerequisites
+- Python 3.10+
+- Node.js 16+ & npm
 
-### Backend Setup — FastAPI (Python)
+### Backend Setup (FastAPI)
 
-Go to the `backend/` folder and run:
+Navigate to the `backend/` directory:
 
-```sh
-# 1️⃣ Create Virtual Environment
+```bash
+cd backend
+
+# 1. Create a virtual environment
 python -m venv venv
 
-# 2️⃣ Activate Virtual Environment
+# 2. Activate the virtual environment
 # Windows:
 .\venv\Scripts\activate
 # macOS/Linux:
 source venv/bin/activate
 
-# 3️⃣ Install Dependencies
+# 3. Install dependencies
+# Note: Use 'opencv-python-headless' if deploying to a server without GUI
 pip install -r requirements.txt
 
-# 4️⃣ Run Backend Server
+# 4. Start the API server
 uvicorn main:app --reload
 ```
 Backend running at → http://127.0.0.1:8000
 
-### Frontend Setup — React (Node.js)
+### Frontend Setup (React)
+
+Open a new terminal and navigate to the frontend/ directory:
+
 ```sh
-# 1️⃣ Install Node Modules
+cd frontend
+
+# 1. Install dependencies
 npm install
 
-# 2️⃣ Start Development Server
+# 2. Start the development server
 npm run dev
 ```
 Frontend running at → http://localhost:5173
@@ -92,23 +116,46 @@ Frontend running at → http://localhost:5173
 ## Project Structure
 ```
 ParallelVision/
- ├── backend/
- │   ├── main.py
- │   ├── processing/
- │   ├── requirements.txt
- │   └── uploads/
- ├── frontend/
- │   ├── src/
- │   ├── public/
- │   └── package.json
- └── README.md
+├── backend/
+│   ├── main.py
+│   ├── image_pipeline.py
+│   ├── processor.py
+│   ├── job_store.py
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── uploads/
+│   └── outputs/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/
+│   │   │   ├── AdvancedControls.tsx
+│   │   │   ├── ApiStatus.tsx
+│   │   │   ├── CpuVisualization.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── ImageComparison.tsx
+│   │   │   ├── ImageUploader.tsx
+│   │   │   ├── LandingPipeline.tsx
+│   │   │   ├── NavLink.tsx
+│   │   │   ├── PerformanceChart.tsx
+│   │   │   ├── PipelineVisualization.tsx
+│   │   │   └── ResultCard.tsx
+│   │   ├── hooks/
+│   │   │   └── use-mobile.ts
+│   │   ├── lib/
+│   │   │   ├── api.ts
+│   │   │   └── utils.ts
+│   │   ├── pages/
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Index.tsx
+│   │   │   └── NotFound.tsx
+│   │   ├── App.tsx
+│   │   └── index.css
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+└── README.md
 ```
 
-## Screenshots
-
-## Collaborators
-
 ## License
-MIT License © 2025 — ParallelVision Contributors
-
-
+MIT License © 2025 ParallelVision. All rights reserved. Parallel and Distributed Computing Project.
