@@ -5,7 +5,7 @@
 
 **ParallelVision** is a full-stack image processing engine engineered to demonstrate the superior efficiency of **parallel computing** over traditional sequential execution. 
 
-Designed for medical imaging (specifically brain tumor MRI scans), it features a dual-mode processing pipeline ("Auto" & "Advanced") that leverages **multi-threading** to perform noise reduction, contrast enhancement, and **K-Means clustering segmentation**. The application provides real-time analytics, visualizing the speedup achieved by processing batched image data in parallel.
+Designed for medical imaging (specifically brain tumor MRI scans), it features a dual mode processing pipeline ("Auto" & "Manual") that leverages **multi-threading** to perform noise reduction, contrast enhancement, and **K-Means clustering segmentation**. The application provides real-time analytics, visualizing the speedup achieved by processing batched image data in parallel.
 
 > **Experience the difference:** Compare serial vs. parallel execution times in real time with our interactive dashboard.
 
