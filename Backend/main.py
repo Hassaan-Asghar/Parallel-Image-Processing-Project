@@ -7,6 +7,7 @@ import cv2
 from job_store import job_status, job_results
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from pathlib import Path
 
 from image_pipeline import load_images, calculate_global_noise_thresholds
 from processor import run_serial, run_parallel
@@ -21,22 +22,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploads"
-OUTPUT_DIR = "outputs"
+# Configure directories for both local and Hugging Face Spaces environments
+if os.environ.get('HUGGINGFACE_SPACES'):
+    # Running on HF Spaces
+    BASE_DIR = Path("/tmp/hf_spaces_data")
+else:
+    # Running locally
+    BASE_DIR = Path.cwd()
+
+BASE_DIR.mkdir(parents=True, exist_ok=True)
+
+UPLOAD_DIR = str(BASE_DIR / "uploads")
+OUTPUT_DIR = str(BASE_DIR / "outputs")
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/outputs", StaticFiles(directory=OUTPUT_DIR), name="outputs")
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "online"}
+    return {"status": "online", "environment": "huggingface_spaces" if os.environ.get('HUGGINGFACE_SPACES') else "local"}
 
 @app.get("/outputs/{session_id}/{filename}")
 def get_output_file(session_id: str, filename: str):
-    path = f"outputs/{session_id}/{filename}"
+    path = os.path.join(OUTPUT_DIR, session_id, filename)
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(path)
@@ -56,15 +67,15 @@ async def upload_images(
     total_images = len(files)
     job_status[session_id] = "processing"
 
-    session_upload = f"{UPLOAD_DIR}/{session_id}"
-    session_output = f"{OUTPUT_DIR}/{session_id}"
+    session_upload = os.path.join(UPLOAD_DIR, session_id)
+    session_output = os.path.join(OUTPUT_DIR, session_id)
 
     os.makedirs(session_upload, exist_ok=True)
     os.makedirs(session_output, exist_ok=True)
 
     img_paths = []
     for file in files:
-        path = f"{session_upload}/{file.filename}"
+        path = os.path.join(session_upload, file.filename)
         with open(path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         img_paths.append(path)
@@ -135,7 +146,7 @@ def process_job(
 
         for path, img in parallel_results:
             name = os.path.basename(path)
-            out_path = f"{OUTPUT_DIR}/{session_id}/final_{name}"
+            out_path = os.path.join(OUTPUT_DIR, session_id, f"final_{name}")
             cv2.imwrite(out_path, img)
 
             response_images.append({
