@@ -10,7 +10,7 @@ This guide explains how to deploy the **Parallel Image Processing Backend** on H
 
 ## Deployment Steps
 
-### Step 1: Push Changes to GitHub ✅
+### Step 1: Push Changes to GitHub 
 All files have been created in your repository:
 - `app.py` - Wrapper for HF Spaces
 - `requirements.txt` - Root-level dependencies with Gunicorn
@@ -207,11 +207,11 @@ Protect endpoints with API keys or authentication tokens.
 
 ## Next Actions
 
-1. ✅ Files created in your repository
-2. 👉 Go to Hugging Face and create a new Space
-3. 👉 Connect your GitHub repository
-4. 👉 Wait for build to complete
-5. 👉 Update your frontend URL to point to the new Space
-6. 👉 Test all API endpoints
+1. Files created in your repository
+2. Go to Hugging Face and create a new Space
+3. Connect your GitHub repository
+4. Wait for build to complete
+5. Update your frontend URL to point to the new Space
+6. Test all API endpoints
 
-Good luck with your deployment! 🚀
+Good luck with your deployment! 
